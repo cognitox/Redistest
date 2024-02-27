@@ -115,6 +115,11 @@ namespace Redistest
 
             }
         }
+        /// <summary>
+        /// https://stackexchange.github.io/StackExchange.Redis/KeysScan
+        /// </summary>
+        /// <param name="pattern"></param>
+        /// <returns></returns>
         private static async Task GetKeys(string pattern)
         {            
             // Get All keys
