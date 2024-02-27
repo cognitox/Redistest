@@ -46,7 +46,9 @@ namespace Redistest
                 // Perform cache operations using the cache object...
                 Console.WriteLine("Running... Press any key to quit.");
 
+                //Uncomment the following line to set keys first.
                 //Task thread1 = Task.Run(() => SetKeys("Thread 1"));
+
                 while (!Console.KeyAvailable)
                 {
                     Task thread2 = Task.Run(() => GetKeys("Message"));

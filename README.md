@@ -33,6 +33,8 @@ dotnet restore
 
 Update the config.json file with cache name and password (primary access key).
 
+Uncomment line 50 to set the keys first.
+
 Execute the following command in your command window to build the app:
 
 ```
