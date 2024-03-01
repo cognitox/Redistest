@@ -46,8 +46,12 @@ namespace Redistest
                 // Perform cache operations using the cache object...
                 Console.WriteLine("Running... Press any key to quit.");
 
-                //Uncomment the following line to set keys first.
-                //Task thread1 = Task.Run(() => SetKeys("Thread 1"));
+                //Set Keys first line to set keys first.
+                if (cacheConfig.SetKeysFirst)
+                {
+                    Task thread1 = Task.Run(() => SetKeys("Thread 1", cacheConfig.KeyPrefix));
+                    Task.WaitAll(thread1);
+                }
                 if (!cacheConfig.ClusterMode)
                 {
 
@@ -58,10 +62,10 @@ namespace Redistest
                 }
                 else
                 {
+                    
                     while (!Console.KeyAvailable)
                     {
-                        Task thread2 = Task.Run(() => GetKeys("Message"));
-                        //Task thread2 = Task.Run(() => RunRedisCommandsAsync("Thread 2"));
+                        Task thread2 = Task.Run(() => GetKeys(cacheConfig.KeyPrefix));
                         Thread.Sleep(5000);
                         Task.WaitAll(thread2);
                     }
@@ -112,7 +116,7 @@ namespace Redistest
             Console.WriteLine($"{prefix}: Employee.Age  : {e007FromCache.Age}{Environment.NewLine}");
         }
 
-        private static async Task SetKeys(string prefix)
+        private static async Task SetKeys(string threadId, string keyPrefix)
         {
             string key = "";
             string value = "";
@@ -120,18 +124,18 @@ namespace Redistest
             for (int i = 0; i < 100; i++)
             {
                 // Simple get and put of integral data types into the cache
-                 key = $"Message{i}";
+                 key = $"{keyPrefix}{i}";
                  value = $"Hello! This is value for {key}";
-                Console.WriteLine($"{Environment.NewLine}{prefix}: Cache command: SET {key} \"{value}\" via StringSetAsync()");
+                Console.WriteLine($"{Environment.NewLine}{threadId}: Cache command: SET {key} \"{value}\" via StringSetAsync()");
                 bool stringSetResult = await _redisConnection.BasicRetryAsync(async (db) => await db.StringSetAsync(key, value));
-                Console.WriteLine($"{prefix}: Cache response: {stringSetResult}");
+                Console.WriteLine($"{threadId}: Cache response: {stringSetResult}");
 
             }
         }
         /// <summary>
         /// https://stackexchange.github.io/StackExchange.Redis/KeysScan
         /// </summary>
-        /// <param name="pattern"></param>
+        /// <param name="pattern">Get by pattern - only available in cluster mode</param>
         /// <returns></returns>
         private static async Task GetKeys(string pattern)
         {            
@@ -152,5 +156,6 @@ namespace Redistest
                 }
             }
         }
+        
     }
 }

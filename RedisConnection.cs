@@ -41,11 +41,14 @@ namespace Redistest
             return _connection;
         }
 
-        public List<EndPoint> GetEndpoints()
+        public List<EndPoint> GetEndpoints(int skip = 1)
         {
-            var endpoints = _connection.GetEndPoints().Skip(1).ToList();
-
-            return endpoints;
+            var endpoints = _connection.GetEndPoints();
+            if (skip > 0 )
+            {
+                return endpoints.Skip(skip).ToList();
+            }
+            return endpoints.ToList();
         }
         public static async Task<RedisConnection> InitializeAsync(string connectionString)
         {

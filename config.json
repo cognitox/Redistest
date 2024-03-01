@@ -2,7 +2,10 @@
   "CacheConfig": {
     "name": "",
     "password": "",
-    "ClusterMode": false
+    "KeyPrefix": "Message",
+    "SearchPattern": "Message",
+    "ClusterMode": false,
+    "SetKeysFirst": true
   }
   //"MySecondClass": {
   //  "SettingOne": "some string value",
