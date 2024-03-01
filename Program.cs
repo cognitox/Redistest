@@ -48,14 +48,25 @@ namespace Redistest
 
                 //Uncomment the following line to set keys first.
                 //Task thread1 = Task.Run(() => SetKeys("Thread 1"));
-
-                while (!Console.KeyAvailable)
+                if (!cacheConfig.ClusterMode)
                 {
-                    Task thread2 = Task.Run(() => GetKeys("Message"));
-                    //Task thread2 = Task.Run(() => RunRedisCommandsAsync("Thread 2"));
+
+                    Task thread1 = Task.Run(() => RunRedisCommandsAsync("Thread 1"));
+                    Task thread2 = Task.Run(() => RunRedisCommandsAsync("Thread 2"));
                     Thread.Sleep(5000);
-                    Task.WaitAll(thread2);
+                    Task.WaitAll(thread1, thread2);
                 }
+                else
+                {
+                    while (!Console.KeyAvailable)
+                    {
+                        Task thread2 = Task.Run(() => GetKeys("Message"));
+                        //Task thread2 = Task.Run(() => RunRedisCommandsAsync("Thread 2"));
+                        Thread.Sleep(5000);
+                        Task.WaitAll(thread2);
+                    }
+                }
+                
             }
             finally
             {

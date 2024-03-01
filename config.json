@@ -1,7 +1,8 @@
 {
   "CacheConfig": {
     "name": "",
-    "password": ""
+    "password": "",
+    "ClusterMode": false
   }
   //"MySecondClass": {
   //  "SettingOne": "some string value",
