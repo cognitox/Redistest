@@ -121,7 +121,7 @@ namespace Redistest
             string key = "";
             string value = "";
 
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 20000; i++)
             {
                 // Simple get and put of integral data types into the cache
                  key = $"{keyPrefix}{i}";
