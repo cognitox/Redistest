@@ -49,26 +49,24 @@ namespace Redistest
                 //Set Keys first line to set keys first.
                 if (cacheConfig.SetKeysFirst)
                 {
-                    Task thread1 = Task.Run(() => SetKeys("Thread 1", cacheConfig.KeyPrefix));
+                    Task thread1 = Task.Run(() => SetKeys("Thread 1", cacheConfig.KeyPrefix, cacheConfig.NumberOfKeysToSet));
                     Task.WaitAll(thread1);
                 }
-                if (!cacheConfig.ClusterMode)
+                if (cacheConfig.ClusterMode)
                 {
-
-                    Task thread1 = Task.Run(() => RunRedisCommandsAsync("Thread 1"));
-                    Task thread2 = Task.Run(() => RunRedisCommandsAsync("Thread 2"));
-                    Thread.Sleep(5000);
-                    Task.WaitAll(thread1, thread2);
-                }
-                else
-                {
-                    
                     while (!Console.KeyAvailable)
                     {
                         Task thread2 = Task.Run(() => GetKeys(cacheConfig.KeyPrefix));
                         Thread.Sleep(5000);
                         Task.WaitAll(thread2);
                     }
+                }
+                else
+                {
+                    Task thread1 = Task.Run(() => RunRedisCommandsAsync("Thread 1"));
+                    Task thread2 = Task.Run(() => RunRedisCommandsAsync("Thread 2"));
+                    Thread.Sleep(5000);
+                    Task.WaitAll(thread1, thread2);                    
                 }
                 
             }
@@ -116,12 +114,12 @@ namespace Redistest
             Console.WriteLine($"{prefix}: Employee.Age  : {e007FromCache.Age}{Environment.NewLine}");
         }
 
-        private static async Task SetKeys(string threadId, string keyPrefix)
+        private static async Task SetKeys(string threadId, string keyPrefix, int numberOfKeysToSet = 200)
         {
             string key = "";
             string value = "";
 
-            for (int i = 0; i < 20000; i++)
+            for (int i = 0; i < numberOfKeysToSet; i++)
             {
                 // Simple get and put of integral data types into the cache
                  key = $"{keyPrefix}{i}";
@@ -145,6 +143,13 @@ namespace Redistest
             var endpoints = _redisConnection.GetEndpoints();
             var _conn = _redisConnection.GetConnection();
 
+            
+            Console.WriteLine($"{Environment.NewLine}Total nodes in the Redis cluser is: Cache command: keys {endpoints.Count}");
+            foreach (var endpoint in endpoints)
+            {
+                Console.WriteLine($"List of nodes are as follows:");
+                Console.WriteLine($"{Environment.NewLine}{endpoint}");
+            }
             foreach (var endpoint in endpoints)
             {
                 var point = endpoint.ToString();

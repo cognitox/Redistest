@@ -6,4 +6,5 @@
     public string SearchPattern { get; set; }
     public bool ClusterMode { get; set; }
     public bool SetKeysFirst { get; set; }
+    public int NumberOfKeysToSet { get; set; }
 }

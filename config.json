@@ -5,8 +5,8 @@
     "KeyPrefix": "Message",
     "SearchPattern": "Message",
     "ClusterMode": false,
-    "SetKeysFirst": false,
-    "NumberOfKeysToSet": 200
+    "SetKeysFirst": true,
+    "NumberOfKeysToSet": 2000
   }
   //"MySecondClass": {
   //  "SettingOne": "some string value",
